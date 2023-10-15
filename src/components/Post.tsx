@@ -17,7 +17,7 @@ const Post: FC<{
 }> = ({ title, category, imageUrl, author, date, group, postUrl }) => {
   return (
     <article className={`p-card u-no-padding ${PostStyle.Card} flex column`}>
-      <aside className={PostStyle.Header}>{group}</aside>
+      <aside className={`${PostStyle.Header} p-text--small`}>{group}</aside>
       <div className={PostStyle.Separator} />
       <div className={`${PostStyle.CardBody} p-card__inner`}>
         <Image
@@ -27,7 +27,7 @@ const Post: FC<{
           width={960}
           height={540}
         />
-        <h1 className="p-heading--3">
+        <h1 className="p-heading--4">
           <a href={postUrl} target="_blank" rel="noreferrer">
             {title}
           </a>
