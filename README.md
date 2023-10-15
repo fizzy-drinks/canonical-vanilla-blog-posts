@@ -19,3 +19,9 @@ yourself using Node.js and NPM.
 npm install
 npm run dev
 ```
+
+## Change the API source
+
+Create a `.env.local` file, and set the `NEXT_PUBLIC_POST_API_URL` to your custom API.
+
+```NEXT_PUBLIC_POST_API_URL=https://localhost:5000/posts```
