@@ -1,95 +1,50 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import PostData from "@/types/post";
+import Post from "@/components/Post";
+import styles from "./page.module.scss";
 
-export default function Home() {
+async function getPostData(): Promise<PostData[]> {
+  const data = await fetch(process.env.NEXT_PUBLIC_POST_API_URL as string, {
+    cache: "force-cache",
+  });
+  return data.json();
+}
+
+const findFirstTerm = (
+  post: PostData,
+  property: "group" | "tags" | "categories",
+) =>
+  post[property]
+    .map(
+      (id) => post._embedded["wp:term"].flat().find((i) => i.id === id)?.name,
+    )
+    .shift();
+
+export default async function Home() {
+  const posts = await getPostData();
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <main className={styles.Root}>
+      <p>
+        Stretch the page around or use the device toolbar to test different
+        resolutions!
+      </p>
+      <div className={`${styles.Container} flex`}>
+        {posts.map((post) => (
+          <div key={post.id} className={`${styles.CardContainer} flex`}>
+            <Post
+              title={post.title.rendered}
+              date={new Date(post.date)}
+              author={post._embedded.author[0]}
+              category={findFirstTerm(post, "categories")}
+              group={
+                findFirstTerm(post, "group") || findFirstTerm(post, "tags")
+              }
+              imageUrl={post.featured_media}
+              postUrl={post.link}
             />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+          </div>
+        ))}
       </div>
     </main>
-  )
+  );
 }

@@ -1,0 +1,12 @@
+@import 'node_modules/vanilla-framework';
+
+@include vanilla;
+
+.flex {
+  display: flex;
+  align-items: stretch;
+}
+
+.column {
+  flex-direction: column;
+}

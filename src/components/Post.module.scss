@@ -1,0 +1,25 @@
+.Separator {
+  border-bottom: dotted 1px lightgray;
+  margin: 0 .5em;
+}
+
+.Header {
+  border-radius: 2px;
+  border-top: solid 3px #a87ca0;
+  font-weight: 400;
+  text-transform: uppercase;
+  padding: .5em 1em;
+}
+
+.Card {
+  box-shadow: 0 0 8px #0003;
+}
+
+.CardBody {
+  flex: 1 1 auto;
+}
+
+.Footer {
+  padding: 1em;
+  margin: 0;
+}
